@@ -1,0 +1,124 @@
+spring:
+  application:
+    name: ${TENANT_GROUP:}sail-route
+  cloud:
+    deploy:
+      mode: ${DEPLOY_MODE:private}
+    circuit:
+      breaker:
+        enabled: false
+    loadbalancer: 
+      retry: 
+        enabled: false
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 4000000
+      max-request-size: 10000000
+      file-size-threshold: 0
+      resolve-lazily: false
+
+tenant:
+  group: ${TENANT_GROUP:}
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+  logfile:
+    enabled: true
+    
+feign:
+  hystrix:
+    enabled: false
+
+management:
+  context-path: /mgmt
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+            
+ribbon:
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
+  OkToRetryOnAllOperations: true
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 1 
+  
+zuul:
+  host: 
+    maxTotalConnections: 20480
+    maxPerRouteConnections: 1000
+  semaphore: 
+    max-semaphores: 20480
+  sensitiveHeaders:
+  FormBodyWrapperFilter: 
+    pre: 
+      disable: true
+  routes:
+    marketing: 
+      path: /sail/marketing/**
+      serviceId: ${TENANT_GROUP:}sail-marketing
+      stripPrefix: false
+#    memberSwagger: 
+#      path: /api/member/**
+#      serviceId: sail-member
+#      url: http://sailmember.intra.sit.ffan.com
+    member: 
+      path: /sail/member/**
+      serviceId: ${TENANT_GROUP:}sail-member
+      stripPrefix: false
+#    point: 
+#      path: /sail/point/**
+#      serviceId: ${TENANT_GROUP:}sail-member
+#      stripPrefix: false
+#    merchantSwagger: 
+#      path: /api/merchant/**
+#      serviceId: sail-merchant-v1
+      #url: http://sailmerchant.intra.sit.ffan.com
+    merchant: 
+      path: /sail/merchant/**
+      serviceId: ${TENANT_GROUP:}sail-merchant
+      stripPrefix: false   
+    postImages: 
+      path: /sail/images
+      serviceId: ${TENANT_GROUP:}sail-merchant
+      stripPrefix: false
+    images: 
+      path: /sail/images/**
+      serviceId: ${TENANT_GROUP:}sail-merchant
+      stripPrefix: false   
+    basicDataService: 
+      path: /sail/basic/**
+      serviceId: ${TENANT_GROUP:}sail-merchant
+      stripPrefix: false
+    image: 
+      path: /image
+      serviceId: ${TENANT_GROUP:}sail-merchant
+      stripPrefix: false
+    gifts: 
+      path: /sail/gifts
+      serviceId: ${TENANT_GROUP:}sail-member
+      stripPrefix: false
+    giftsOther: 
+      path: /sail/gifts/**
+      serviceId: ${TENANT_GROUP:}sail-member
+      stripPrefix: false
+    gift: 
+      path: /sail/gift/**
+      serviceId: ${TENANT_GROUP:}sail-member
+      stripPrefix: false
+    pointtest: 
+      path: /sail/point/**
+      serviceId: ${TENANT_GROUP:}sail-point
+      stripPrefix: false
+#logging:
+#  level:
+#    ROOT: INFO 

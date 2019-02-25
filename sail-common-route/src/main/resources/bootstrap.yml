@@ -1,0 +1,60 @@
+server:
+  port: ${SERVER_PORT:10000}
+  connection-timeout: 40000
+  tomcat:
+    basedir: ./tmp
+    background-processor-delay: 30
+    max-connections: ${SERVER.TOMCAT.MAX-CONNECTIONS:20480}
+    max-threads: ${SERVER.TOMCAT.MAX-THREADS:16}
+    accept-count: ${SERVER.TOMCAT.ACCEPT-COUNT:20480}
+    min-spare-threads: ${SERVER.TOMCAT.MIN-SPARE-THREADS:16}
+    acceptor-thread-count: ${SERVER.TOMCAT.ACCEPTOR-THREAD-COUNT:16}
+    max-http-post-size: 10000000
+    accesslog: 
+      enabled: true
+      buffered: true
+      directory: ./log
+      file-date-format: .yyyy-MM-dd
+      pattern: '%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i" %D'
+      prefix: access_log
+      suffix: .log
+      rename-on-rotate: false
+      request-attributes-enabled: false
+      rotate: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${REGISTER_CENTER_DEFAULT_SERVICE_URL:http://registry.intra.sit.ffan.com/eureka/}
+  instance:
+    hostname: ${SERVER_HOSTNAME:127.0.0.1}
+    ipAddress: ${SERVER_ACCESSABLE_IP:127.0.0.1}
+    nonSecurePort: ${SERVER_ACCESSABLE_PORT:10000}
+    preferIpAddress: true
+    instanceId: ${spring.cloud.client.hostname}:${spring.application.name}:${eureka.instance.ipAddress}:${server.port}
+    appname: ${spring.application.name}
+    virtualHostName: ${spring.application.name}
+    secureVirtualHostName: ${spring.application.name}
+    metadataMap:
+      owner: Jack
+      version: 1.0.0
+      language: java
+      type: logic
+      doc: url
+
+      
+      
+      
+      
+      
+
+
+
+
+
+
+
+
+
+
+      
