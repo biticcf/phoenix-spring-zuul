@@ -18,8 +18,9 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
 /**
- * 
- * @author Jiaying
+ * @Author: DanielCao
+ * @Date:   2017年10月29日
+ * @Time:   下午8:07:21
  *
  */
 @Import({AdminConfiguration.class})
@@ -102,9 +103,4 @@ public class SmartRouteApplication {
 		}
     	
     }
-
-
-
-
-
 }

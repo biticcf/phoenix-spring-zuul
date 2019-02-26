@@ -79,4 +79,14 @@
 		<module>sail-common-route</module>
   	</modules>
 	
+	<repositories>
+		<repository>
+			<id>rdc-releases</id>
+			<url>https://repo.rdc.aliyun.com/repository/49339-release-Sz60lB/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	
 </project>

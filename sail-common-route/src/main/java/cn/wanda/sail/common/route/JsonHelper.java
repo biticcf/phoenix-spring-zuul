@@ -20,10 +20,10 @@ import java.util.Map;
 import java.util.TimeZone;
 
 /**
- * @author: chengyang.
- * @email: chengyang14@wanda.cn
- * @time: 17/4/26
- * @description: json操作类
+ * @Author: DanielCao
+ * @Date:   2017年10月29日
+ * @Time:   下午8:07:21
+ *
  */
 public class JsonHelper {
 

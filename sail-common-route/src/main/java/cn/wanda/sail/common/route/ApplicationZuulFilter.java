@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author: chengyang.
- * @email: chengyang14@wanda.cn
- * @time: 17/4/26
- * @description: 描述
+ * @Author: DanielCao
+ * @Date:   2017年10月29日
+ * @Time:   下午8:07:21
+ *
  */
 public class ApplicationZuulFilter extends ZuulFilter {
 

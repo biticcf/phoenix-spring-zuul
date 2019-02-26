@@ -67,22 +67,10 @@ zuul:
       path: /sail/marketing/**
       serviceId: ${TENANT_GROUP:}sail-marketing
       stripPrefix: false
-#    memberSwagger: 
-#      path: /api/member/**
-#      serviceId: sail-member
-#      url: http://sailmember.intra.sit.ffan.com
     member: 
       path: /sail/member/**
       serviceId: ${TENANT_GROUP:}sail-member
       stripPrefix: false
-#    point: 
-#      path: /sail/point/**
-#      serviceId: ${TENANT_GROUP:}sail-member
-#      stripPrefix: false
-#    merchantSwagger: 
-#      path: /api/merchant/**
-#      serviceId: sail-merchant-v1
-      #url: http://sailmerchant.intra.sit.ffan.com
     merchant: 
       path: /sail/merchant/**
       serviceId: ${TENANT_GROUP:}sail-merchant

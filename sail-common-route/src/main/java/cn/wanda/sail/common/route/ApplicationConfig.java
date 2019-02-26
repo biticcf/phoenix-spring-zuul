@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * @author: chengyang.
- * @email: chengyang14@wanda.cn
- * @time: 17/5/5
- * @description: 鎻忚堪
+ * @Author: DanielCao
+ * @Date:   2017年10月29日
+ * @Time:   下午8:07:21
+ *
  */
 @Component
 @ConfigurationProperties(prefix="route")
