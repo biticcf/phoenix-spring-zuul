@@ -6,7 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
-import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -73,8 +72,6 @@ public class SmartRouteApplication {
 		@Override
 		public Object run() {
 			RequestContext context = RequestContext.getCurrentContext();
-			ProxyRequestHelper proxyRequestHelper = new ProxyRequestHelper();
-			proxyRequestHelper.addIgnoredHeaders();
 			try {
 				String requestURI = (String)context.get(REQUEST_URI);
 				 if((requestURI.contains(SWAGGER) || requestURI.contains(API)) && !requestURI.contains(SAIL_MARKETING)){

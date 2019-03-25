@@ -1,19 +1,13 @@
 package cn.wanda.sail.common.route;
 
 import cn.wanda.sail.common.route.Constants;
-import cn.wanda.sail.common.route.JsonHelper;
-import cn.wanda.sail.common.route.TenantService;
-import cn.wanda.sail.tenant.admin.facade.response.dto.TenantDto;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.ArrayList;
@@ -59,10 +53,7 @@ public class ApplicationZuulFilter extends ZuulFilter {
 
     @Value("${tenant.group}")
     String tenantGroupDefault;
-
-    @Autowired
-    private TenantService tenantService;
-
+    
     @Override
     public boolean shouldFilter() {
         return true;
@@ -74,8 +65,6 @@ public class ApplicationZuulFilter extends ZuulFilter {
     	logger.info("start[" + tracrId + "]...");
     	
         RequestContext context = RequestContext.getCurrentContext();
-        ProxyRequestHelper proxyRequestHelper = new ProxyRequestHelper();
-        proxyRequestHelper.addIgnoredHeaders();
         String serverName = null;
         context.setSendZuulResponse(true);
         try {
@@ -108,20 +97,10 @@ public class ApplicationZuulFilter extends ZuulFilter {
                 routeSwaggerApi(context);
                 return null;
             }
-            List<TenantDto> tenants = queryTenants(context);
-
-            if (tenants !=null && tenants.size() > 1) {
-                context.setSendZuulResponse(false);
-                context.setResponseStatusCode(401);
-                String tenantJson = JsonHelper.toJson(tenants);
-                if (logger.isInfoEnabled()) {
-                    logger.info("get tenants from tenant center:{}", tenantJson);
-                }
-                context.setResponseBody(tenantJson);
-                return null;
-            }
-            String serviceId = getServiceId(tenants, serverName, context);
+            
+            String serviceId = getServiceId(serverName, context);
             context.set("serviceId", serviceId);
+            
             routeSwaggerApi(context);
         } catch (Exception ex) {
             context.set("error.status_code", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -148,37 +127,7 @@ public class ApplicationZuulFilter extends ZuulFilter {
             context.set(Constants.REQUEST_URI, requestURI);
         }
     }
-
-    private List<TenantDto> queryTenants(RequestContext context) throws Exception {
-        HttpServletRequest request = context.getRequest();
-        Long tenantId = null;
-        if (request.getHeader("tenantId") != null) {
-            tenantId = Long.valueOf(request.getHeader("tenantId"));
-        }
-        if (tenantId == null) {
-            String t = request.getParameter("t");
-            if (t != null) {
-                tenantId = Long.valueOf(t);
-            }
-        }
-        String username = request.getParameter("username");
-       
-        String domain = request.getHeader("Referer");
-//        String domain = request.getRemoteHost();
-//        domain = null;
-        
-        String memberName = request.getParameter("memberName");
-        
-        logger.info("query tenant group tenantId:{}, userName:{}, domain:{}, memberName:{}", tenantId, username, domain, memberName);
-        List<TenantDto> tenants = null;
-        if (tenantId != null || domain != null || username != null || memberName != null) {
-            tenants = tenantService.queryTenantGroup(tenantId, domain, username, memberName);
-        }
-        logger.info("query tenant group tenants:{}", tenants);
-        return tenants;
-
-    }
-
+    
     @Override
     public String filterType() {
         return "route";
@@ -220,37 +169,15 @@ public class ApplicationZuulFilter extends ZuulFilter {
                 break;
             }
         }
-
-//        if(requestURI.contains(Constants.SAIL_MERCHANT))
-//            serverName = Constants.MERCHANT_APP_NAME;
-//        if(requestURI.contains(Constants.SAIL_MEMBER))
-//            serverName = Constants.MEMBER_APP_NAME;
-//        if(requestURI.contains(Constants.SAIL_MARKETING))
-//            serverName = Constants.MARKETING_APP_NAME;
+        
         return serverName;
     }
 
-    private String getServiceId(List<TenantDto> tenants, String serverName, RequestContext context) {
+    private String getServiceId(String serverName, RequestContext context) {
         StringBuilder routeName = new StringBuilder();
-        if (tenants != null && tenants.isEmpty() == false) {
-            TenantDto tenantDto = tenants.get(0);
-
-            HttpServletRequest request = context.getRequest();
-            if (request.getHeader("tenantId") == null) {
-                Long tenantId = tenantDto.getId();
-                context.addZuulRequestHeader("tenantId", String.valueOf(tenantId));
-                logger.info("add zuul request Header:{}", tenantId);
-            }
-            String groupName = tenantDto.getGroup().getEnglishName();
-            groupName = groupName.trim();
-            if (!StringUtils.isEmpty(groupName)) {
-                routeName.append(groupName).append("-");
-            }
-            routeName.append(serverName);
-        } else {
-            routeName.append(serverName);
-        }
+        routeName.append(serverName);
         logger.info("route get group-server is:{}", routeName.toString());
+        
         return routeName.toString();
     }
     
